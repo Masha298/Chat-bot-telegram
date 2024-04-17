@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Bot Telegram</title>
+<style>
+    .chat-container {
+        width: 300px;
+        height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .chatwindow {
+        display: none;
+        width: 400px;
+        height: 200px;
+        overflow-y: scroll;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .message {
+        background-color: #f9f9f9;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    #replyButton {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="chat" class="chat">
+
+    <div id="Header" class="header">
+        <h1 id="myHeading">Чат</h1>  
+    </div>
+
+    <div id="LeftColumn" class="left-column">
+        <div class="chat-container" id="chat-container">
+            
+        </div>
+    </div>
+
+    <div id="messages" class="messages">
+        
+    </div>
+
+</div>
+<script>
+const token = 'token bota';
+const wsUrl = 'ws Url' + token;
+
+var ws = new WebSocket(wsUrl);
+let users = [];
+
+ws.onopen = function() {
+    console.log('WebSocket connection established!');
+};
+//получение сообщений
+ws.onmessage = function(e) {
+    const mess = JSON.parse(e.data);
+    const userId = mess.message.from.id;
+addUserToChatContainer(userId);
+    renderMessage(`id ${userId}: ${mess.message.text}`, userId);
+};
+
+ws.onclose = function() {
+    console.log('WebSocket connection closed');
+};
+
+function renderMessage(message, userId) {
+    const chatWindow = document.getElementById(`chatwindow-${userId}`);
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    chatWindow.appendChild(messageElement);
+}
+//отправка сообщений
+function sendMessage(userId) {
+    const message = document.getElementById(`replyMessage-${userId}`).value.trim();
+
+    if (message !== '') {
+        renderMessage(`You: ${message}`, userId);
+        ws.send(`chat_id=${userId}&text=${message}`);
+        document.getElementById(`replyMessage-${userId}`).value = '';
+    } else {
+        alert('Пожалуйста, введите сообщение');
+    }
+}
+
+function addUserToChatContainer(userId) {
+    const userExists = users.includes(userId);
+
+    if (!userExists) {
+        users.push(userId);
+
+        const chatContainer = document.getElementById('chat-container');
+        const userElement = document.createElement('div');
+        userElement.textContent = `ID: ${userId}`;
+        const replyButton = document.createElement('button');
+        replyButton.textContent = 'Ответить';
+        replyButton.onclick = function() {
+            closeAllChatWindows();
+            showReplyModal(userId);
+        };
+        chatContainer.appendChild(userElement);
+        chatContainer.appendChild(replyButton);
+
+        // Создать новое chatwindow для пользователя
+        const newChatwindow = document.createElement('div');
+        newChatwindow.classList.add('chatwindow');
+        newChatwindow.id = `chatwindow-${userId}`;
+        document.getElementById('chat').appendChild(newChatwindow);
+
+        // Добавить поле для ответа и кнопку отправить
+        const replyModal = document.createElement('div');
+        replyModal.id = `replyModal-${userId}`;
+        replyModal.innerHTML = `
+            <input type="text" id="replyMessage-${userId}" placeholder="Введите сообщение...">
+            <button onclick="sendMessage(${userId})">Send</button>
+        `;
+        newChatwindow.appendChild(replyModal);
+    }
+}
+//скрыть все чаты
+function closeAllChatWindows() {
+    const allChatWindows = document.querySelectorAll('.chatwindow');
+    allChatWindows.forEach(chatWindow => {
+        chatWindow.style.display = 'none';
+    });
+}
+
+function showReplyModal(userId) {
+    closeAllChatWindows();
+
+    const chatwindow = document.getElementById(`chatwindow-${userId}`);
+    chatwindow.style.display = 'block';
+
+    // Установить заголовок модального окна
+    const heading = document.getElementById('myHeading');
+    heading.textContent = `Диалог с id: ${userId}`;
+}
+
+</script>
+</body>
+</html>
