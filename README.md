@@ -1,7 +1,6 @@
 # Chat-bot-telegram
-Chat-bot is maden in Java Script.
 
-<p align="center">
+<p>
    <img alt="Programm language" src="https://img.shields.io/badge/Java Script-green">
    <img src="https://img.shields.io/badge/HTML-gree" alt="Programm language">
     <img src="https://img.shields.io/badge/CSS-gray" alt="Style sheet CSS">
