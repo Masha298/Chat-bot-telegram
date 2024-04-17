@@ -3,8 +3,8 @@ Chat-bot is maden in Java Script.
 
 <p align="center">
    <img alt="Programm language" src="https://img.shields.io/badge/Java Script-green">
-   <img src="https://img.shields.io/badge/HTML-gray" alt="Programm language">
-    <img src="https://img.shields.io/badge/CSS-gree" alt="Style sheet CSS">
+   <img src="https://img.shields.io/badge/HTML-gree" alt="Programm language">
+    <img src="https://img.shields.io/badge/CSS-gray" alt="Style sheet CSS">
 </p>
 
 ## About
