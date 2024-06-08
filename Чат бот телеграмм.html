@@ -5,90 +5,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chat Bot Telegram</title>
 <style>
-    .chat-container {
-        width: 300px;
-        height: 200px;
-        overflow-y: scroll;
-        border: 1px solid #ccc;
-        padding: 10px;
+    html, body{
+        margin: 3px;
+        height: 100%;
+        width: 100%;
     }
-    .chatwindow {
-        display: none;
-        width: 400px;
-        height: 200px;
-        overflow-y: scroll;
-        border: 1px solid #ccc;
-        padding: 10px;
+    button{
+        
+
     }
-    .message {
-        background-color: #f9f9f9;
-        padding: 5px;
-        margin-bottom: 10px;
+    .chat{
+        height: 100%;
+        width: 100%; 
     }
 
-    #replyButton {
+
+    .left{
+        float: left;
+        height: 100%;
+        width: 25%
+
+    }
+    
+    .header-left {
+        height: 7%;
+        width: 100%
+        
+    }
+
+    #searchInput {
+    margin: 0% 8% 0% 5%;
+    height: 30px;
+    width: 85%;
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    padding: 5px 5px 5px 5px;
+    background: #F8F8F8;
+}
+    .list{
+        height: 95%;
+    }
+
+    .chat-container {
+    height: 96%;
+    overflow-y: scroll;
+    
+    
+    }
+    
+    #replyButton{
+        height: 13%;
+        width: 100%;
+        border-radius: 12px;
+        background-color: white;
+        border-color: white;
+        appearance: none;
+        border: 0;
+        font-size: 16px;
+    }
+    #replyButton:hover {
+        background: #F8F8F8;
+        transition: 0.3s;
+    }
+
+    #replyButton:focus {
+        outline: none;
+        
+        background: #3d92e7;
+    }
+    #icon{
+        float: left;
+        height: 60px;
+        width: 60px;
+        border-radius: 100px;
+        background-color: lightblue; 
+        
+
+    }
+    #info{
+        height: 15%;
+        width: 100%;
+        border-radius: 5px;
+        
+
+    }
+    .right{
+        float: right;
+        height: 100%;
+        width: 75%;
+
+    }
+    .header-right {
+        height: 4%;
+        padding: 1%;
+        background-color: #c4edff; 
+    }
+    #myHeading{
+        
+        font-weight: 500;
+        font-size: 1.125rem;
+        line-height: 1.375rem;
+        white-space: pre;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        unicode-bidi: plaintext;
+    }
+    .window{
+        padding: 0;
+        background-image: url(https://catherineasquithgallery.com/uploads/posts/2021-02/1612742152_43-p-fon-nezhno-goluboi-detskii-45.png);
+        background-size:contain;
+        height: 90%;
+    }
+    .chatwindow {
+        padding: 0 20% 0 20%;
         display: none;
+        height: 90%;
+        overflow-y: scroll;
+        
+    }
+    #chatwindow {
+        padding: 0 20% 0 20%;
+        display: none;
+        height: 90%;
+        overflow-y: scroll;
+        
+    }
+    .message {
+        font-size: 250%;
+        background-color: #f9f9f9;
+        margin-bottom: 10px;
+    }
+   
+    .replyModal{
+        display: none;
+        height: 10%;
+        width: 100%;
+        padding: 0 20% 0 20%;
+    }
+    #replyModal{
+        display: none;
+        float: right;
+        
+    }
+    #messageElement{
+        width: 50%;
+        font-size: 20px;
+        clear: both;
+        margin: 5px;
+        
+        border-radius: 10px;
+        padding: 5px;
+
+    }
+    .repbut{
+        height: 80%;
+        width: 10%;
+        border-radius: 10px;
+    }
+    .replyMessage{
+        height: 80%;
+        width: 40%;
+        border-radius: 10px;
+        
     }
 </style>
 </head>
 <body>
+<div class="chat" id="chat">
 
-<div id="chat" class="chat">
-
-    <div id="Header" class="header">
-        <h1 id="myHeading">Чат</h1>  
-    </div>
-
-    <div id="LeftColumn" class="left-column">
-        <div class="chat-container" id="chat-container">
+    <div class="left" id="left">
+        <div class="header-left">
             
+            
+            <input type="text" id="searchInput" placeholder="Поиск...">
+    
+        </div>
+
+        <div class="list">
+            <div class="chat-container" id="chat-container">
+                
+                
+                
+            </div>
         </div>
     </div>
 
-    <div id="messages" class="messages">
+    <div class="right" id="right">
+
+        <div class="header-right">
+            <h1 id="myHeading">Чат</h1>
+        </div>
+
+        <div class="window" id="window">
+            
+                <div class="chatwindow" id="chatwindow">
+
+                    <div class="messageElement" id="messageElement">
+                    </div>
+                    <div class="messages" id="messages">
+                    </div>
+                </div>
+            
+            
+                <div class="replyModal" id="replyModal">
+                </div>
+            
+        </div>
+
         
     </div>
 
 </div>
 <script>
-const token = 'token bota';
-const wsUrl = 'ws Url' + token;
-
+const token = 'TOKEN';
+const wsUrl = 'ws://a.eveli.ru:18081/bot' + token;
 var ws = new WebSocket(wsUrl);
 let users = [];
 
 ws.onopen = function() {
     console.log('WebSocket connection established!');
 };
-//получение сообщений
+//получение 
 ws.onmessage = function(e) {
     const mess = JSON.parse(e.data);
-    const userId = mess.message.from.id;
-addUserToChatContainer(userId);
-    renderMessage(`id ${userId}: ${mess.message.text}`, userId);
+    const userId = mess.message.from.id;    
+    const message=mess.message.text;
+    addUserToChatContainer(userId);
+   
+    renderMessage(`${message}`, userId,'left','white');
+    
 };
 
 ws.onclose = function() {
     console.log('WebSocket connection closed');
 };
-
-function renderMessage(message, userId) {
+//отображение сообщений
+function renderMessage(message, userId,fl,col) {
     const chatWindow = document.getElementById(`chatwindow-${userId}`);
     const messageElement = document.createElement('div');
     messageElement.textContent = message;
+    messageElement.style.float = fl;
+    messageElement.style.backgroundColor= col;
+    messageElement.id = `messageElement`;
+    
+
+
+    document.getElementById('chatwindow').appendChild(messageElement);
+
     chatWindow.appendChild(messageElement);
 }
 //отправка сообщений
 function sendMessage(userId) {
     const message = document.getElementById(`replyMessage-${userId}`).value.trim();
 
+    
     if (message !== '') {
-        renderMessage(`You: ${message}`, userId);
+        
+        renderMessage(`${message}`, userId,'right','#ccf0ff');
+        
         ws.send(`chat_id=${userId}&text=${message}`);
         document.getElementById(`replyMessage-${userId}`).value = '';
     } else {
         alert('Пожалуйста, введите сообщение');
     }
+
 }
 
 function addUserToChatContainer(userId) {
@@ -98,51 +279,75 @@ function addUserToChatContainer(userId) {
         users.push(userId);
 
         const chatContainer = document.getElementById('chat-container');
-        const userElement = document.createElement('div');
-        userElement.textContent = `ID: ${userId}`;
         const replyButton = document.createElement('button');
-        replyButton.textContent = 'Ответить';
+        replyButton.id = `replyButton`;
+
+        const icon = document.createElement('div');
+        icon.id = `icon`;
+        replyButton.appendChild(icon);
+
+        const info = document.createElement('div');
+        info.id = `info`;
+        info.textContent=userId;
+        replyButton.appendChild(info);
+
         replyButton.onclick = function() {
-            closeAllChatWindows();
+            closeAllChatWindows(userId);
             showReplyModal(userId);
+            
         };
-        chatContainer.appendChild(userElement);
+        
         chatContainer.appendChild(replyButton);
-
-        // Создать новое chatwindow для пользователя
-        const newChatwindow = document.createElement('div');
-        newChatwindow.classList.add('chatwindow');
-        newChatwindow.id = `chatwindow-${userId}`;
-        document.getElementById('chat').appendChild(newChatwindow);
-
-        // Добавить поле для ответа и кнопку отправить
-        const replyModal = document.createElement('div');
-        replyModal.id = `replyModal-${userId}`;
-        replyModal.innerHTML = `
-            <input type="text" id="replyMessage-${userId}" placeholder="Введите сообщение...">
-            <button onclick="sendMessage(${userId})">Send</button>
-        `;
-        newChatwindow.appendChild(replyModal);
+        
+        createnewchatwin(userId);  
+        addsendmodal(userId);     
     }
 }
+
+// Создать новое chatwindow для пользователя
+function createnewchatwin(userId) {
+    const newChatwindow = document.createElement('div');
+        newChatwindow.classList.add('chatwindow');
+        newChatwindow.id = `chatwindow-${userId}`;
+        document.getElementById('window').appendChild(newChatwindow);
+}
+
+// Добавить поле для ответа и кнопку отправить
+function addsendmodal(userId) {
+    const replyModal = document.createElement('div');
+        replyModal.classList.add('replyModal');
+        replyModal.id = `replyModal-${userId}`;
+        replyModal.innerHTML = `
+            <input type="text" class="replyMessage" id="replyMessage-${userId}" placeholder="Введите сообщение...">
+            <button class="repbut" onclick="sendMessage(${userId})">Send</button>
+        `;
+        document.getElementById('window').appendChild(replyModal);
+
+        
+}
 //скрыть все чаты
-function closeAllChatWindows() {
+function closeAllChatWindows(userId) {
     const allChatWindows = document.querySelectorAll('.chatwindow');
-    allChatWindows.forEach(chatWindow => {
-        chatWindow.style.display = 'none';
+    allChatWindows.forEach(chatwindow => {
+        chatwindow.style.display = 'none';
     });
+    const allreplyModal = document.querySelectorAll('.replyModal');
+    allreplyModal.forEach(replyModal => {
+        replyModal.style.display = 'none';
+    });
+    
 }
 
 function showReplyModal(userId) {
-    closeAllChatWindows();
-
     const chatwindow = document.getElementById(`chatwindow-${userId}`);
     chatwindow.style.display = 'block';
-
+    const replyModal = document.getElementById(`replyModal-${userId}`);
+    replyModal.style.display = 'block';
     // Установить заголовок модального окна
     const heading = document.getElementById('myHeading');
     heading.textContent = `Диалог с id: ${userId}`;
 }
+
 
 </script>
 </body>
